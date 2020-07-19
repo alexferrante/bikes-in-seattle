@@ -8,48 +8,16 @@ import os
 import folium
 import csv
 import datetime
+import matplotlib.pyplot as plt 
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut
 from folium.plugins import TimestampedGeoJson, HeatMapWithTime
+from constants import bike_count_locations, seattle_coords, min_date, max_date
+from analysis import Plot
 
 __author__ = "Your Name"
 __version__ = "0.1.0"
 __license__ = "MIT"
-
-seattle_coords = [47.6062, -122.3321]
-
-bike_count_locations = {
-    "fremont_br": {
-        "coordinates": [47.647956, -122.349649],
-        "file_name": "Fremont_Bridge_Bicycle_Counter",
-        "excess_cols": ["Fremont Bridge East Sidewalk", "Fremont Bridge West Sidewalk"],
-        "comb_cols": []
-    },
-    "spokane_br": {
-        "coordinates": [47.571937, -122.349702],
-        "file_name": "Spokane_St_Bridge_Bicycle_Counter",
-        "excess_cols": ["West", "East"],
-        "comb_cols": []
-    },
-    "oregon_26th": {
-        "coordinates": [47.564988, -122.365739],
-        "file_name": "26th_Ave_SW_Greenway_at_SW_Oregon_St_Bicycle_Counter",
-        "excess_cols": ["North", "South"],
-        "comb_cols": []
-    },
-    "marion_2nd": {
-        "coordinates": [47.605026, -122.332660],
-        "file_name": "2nd_Ave_Cycle_Track_North_of_Marion_St_Bicycle_Counter",
-        "excess_cols": ["NB", "SB"],
-        "comb_cols": []
-    },
-     "myrtle_ed_pk": { 
-        "coordinates": [47.619657, -122.361754],
-        "file_name": "Elliott_Bay_Trail_in_Myrtle_Edwards_Park_Bicycle_and_Pedestrian_Counter",
-        "excess_cols": ["Elliott Bay Trail in Myrtle Edwards Park Total", "Ped North", "Ped South"],
-        "comb_cols": ["Bike North", "Bike South"]
-    }
-}
 
 def prep_business_dataset():
     data_path = f"{os.getcwd()}/data"
@@ -77,8 +45,6 @@ def prep_business_dataset():
 
 def prep_bike_count_datasets():
     data_path = f"{os.getcwd()}/data"
-    min_date = datetime.datetime(2015, 1, 1)
-    max_date = datetime.datetime(2020, 6, 30)
     list_of_all_loc_data = []
     for loc in bike_count_locations:
         list_of_loc_data = get_bike_data_frame(file=bike_count_locations[loc]["file_name"], data_path=data_path, coordinates=bike_count_locations[loc]["coordinates"], min_date=min_date, excess_columns=bike_count_locations[loc]["excess_cols"], comb_cols=bike_count_locations[loc]["comb_cols"])
@@ -110,12 +76,13 @@ def get_bike_data_frame(file, data_path, coordinates, min_date, excess_columns, 
         df = df.resample("D").sum()
         df = df[df.index >= min_date]
         df.rename(columns={df.columns[0]: "Total"}, inplace=True)
+        bike_data_plot = Plot()
+        bike_data_plot.plot_bike_count_over_time(file, df)
         df.apply(combine_loc_count_data_transf, args=(coordinates, list_of_data_list), axis=1)
         return list_of_data_list
 
 def get_geojson_features(df):
     features = []
-    min_date = datetime.datetime(2015, 1, 1)
     df["License Start Date"] = pd.to_datetime(df["License Start Date"])
     df = df[df["License Start Date"] > min_date]
     pairs_of_coords = list(zip(df["Longitude"], df["Latitude"]))
