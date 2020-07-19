@@ -138,15 +138,21 @@ def get_geojson_features(df):
 def main():
     """ Main entry point of the app """
     folium_map = folium.Map(location=seattle_coords, min_zoom=13, max_bounds=True)
-    for loc in bike_count_locations:
-        marker = folium.CircleMarker(location=bike_count_locations[loc]["coordinates"])
-        marker.add_to(folium_map)
+    # for loc in bike_count_locations:
+    #     marker = folium.CircleMarker(location=bike_count_locations[loc]["coordinates"])
+    #     marker.add_to(folium_map)
     data_path = f"{os.getcwd()}/data"
     if not os.path.exists(f"{data_path}/Active_Business_Data_Modified.csv"):
         prep_business_dataset()
     df = pd.read_csv(f"{data_path}/Active_Business_Data_Modified.csv", sep="\t")
     bike_data_by_date, date_indices = prep_bike_count_datasets()
-    HeatMapWithTime(data=bike_data_by_date, index=date_indices,radius=30
+    HeatMapWithTime(data=bike_data_by_date, 
+                    index=date_indices,
+                    radius=50, 
+                    gradient={0.2: 'blue', 0.4: 'lime', 0.6: 'orange', 1: 'red'}, 
+                    use_local_extrema=True,
+                    min_opacity=0.5,
+                    max_opacity=0.8
     ).add_to(folium_map)
     # features = get_geojson_features(df)
     # # TimestampedGeoJson(
