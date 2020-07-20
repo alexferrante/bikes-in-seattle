@@ -113,27 +113,31 @@ def main():
         prep_business_dataset()
     df = pd.read_csv(f"{data_path}/Active_Business_Data_Modified.csv", sep="\t")
     bike_data_by_date, date_indices = prep_bike_count_datasets()
-    HeatMapWithTime(data=bike_data_by_date, 
+    
+    folium_map.add_child(HeatMapWithTime(data=bike_data_by_date, 
                     index=date_indices,
                     radius=50, 
                     gradient={0.2: 'blue', 0.4: 'lime', 0.6: 'orange', 1: 'red'}, 
                     use_local_extrema=True,
                     min_opacity=0.5,
                     max_opacity=0.8
-    ).add_to(folium_map)
-    # features = get_geojson_features(df)
-    # # TimestampedGeoJson(
-    # #     {'type': 'FeatureCollection',
-    # #     'features': features}
-    # #     , period='P1D'
-    # #     , add_last_point=True
-    # #     , auto_play=False
-    # #     , loop=False
-    # #     , loop_button=True
-    # #     , date_options='MM/DD/YYYY'
-    # #     , time_slider_drag_update=True
-    # # ).add_to(folium_map)
+    ))
+
+    folium_map_2 = folium.Map(location=seattle_coords, min_zoom=13, max_bounds=True)
+    features = get_geojson_features(df)
+    folium_map_2.add_child(TimestampedGeoJson(
+        {'type': 'FeatureCollection',
+        'features': features}
+        , period='P1D'
+        , add_last_point=True
+        , auto_play=False
+        , loop=False
+        , loop_button=True
+        , date_options='MM/DD/YYYY'
+        , duration="P1M"
+    ))
     folium_map.save("test.html")
+    folium_map_2.save("test_2.html")
 
 if __name__ == "__main__":
     """ This is executed when run from the command line """
