@@ -64,6 +64,12 @@ def prep_bike_count_datasets():
     return final_data, date_indices, list_of_bike_data_frames
 
 
+def prep_business_data_frame(df):
+    df["License Start Date"] = pd.to_datetime(df["License Start Date"])
+    df = df[df["License Start Date"] > min_date]
+    return df
+
+
 def combine_loc_count_data_transf(r, coordinates, list_of_data_list):
     data_list = coordinates.copy()
     data_list.append(r["Total"])
@@ -86,10 +92,21 @@ def get_bike_data_frame(file, data_path, coordinates, min_date, excess_columns, 
         return list_of_data_list, df
 
 
-def get_geojson_features(df):
+def setup_bike_count_heat_map(bike_data):
+    bike_count_heat_map = folium.Map(location=seattle_coords, min_zoom=13, max_bounds=True)
+    bike_count_heat_map.add_child(HeatMapWithTime(data=bike_data, 
+                    index=date_indices,
+                    radius=50, 
+                    gradient={0.2: 'blue', 0.4: 'lime', 0.6: 'orange', 1: 'red'}, 
+                    use_local_extrema=True,
+                    min_opacity=0.5,
+                    max_opacity=0.8
+    ))
+    bike_count_heat_map.save("bike_count_heat_map.html")
+
+
+def business_time_series_map_features_util(df):
     features = []
-    df["License Start Date"] = pd.to_datetime(df["License Start Date"])
-    df = df[df["License Start Date"] > min_date]
     pairs_of_coords = list(zip(df["Longitude"], df["Latitude"]))
     dates = list(df["License Start Date"].dt.strftime("%m/%d/%Y"))
     for i in range(len(pairs_of_coords)):
@@ -108,27 +125,9 @@ def get_geojson_features(df):
     return features
 
 
-def main():
-    """ Main entry point of the app """
-    bike_count_heat_map = folium.Map(location=seattle_coords, min_zoom=13, max_bounds=True)
-    data_path = f"{os.getcwd()}/data"
-    if not os.path.exists(f"{data_path}/Active_Business_Data_Modified.csv"):
-        prep_business_dataset()
-    business_data_frame = pd.read_csv(f"{data_path}/Active_Business_Data_Modified.csv", sep="\t")
-
-    bike_data_by_date, date_indices, bike_data_frames_list = prep_bike_count_datasets()
-    bike_count_heat_map.add_child(HeatMapWithTime(data=bike_data_by_date, 
-                    index=date_indices,
-                    radius=50, 
-                    gradient={0.2: 'blue', 0.4: 'lime', 0.6: 'orange', 1: 'red'}, 
-                    use_local_extrema=True,
-                    min_opacity=0.5,
-                    max_opacity=0.8
-    ))
-    plot_all_bike_count_data_over_time(bike_data_frames_list)
-
+def setup_business_time_series_map(business_data):
+    features = business_time_series_map_features_util(business_data)
     business_time_series_map = folium.Map(location=seattle_coords, min_zoom=13, max_bounds=True)
-    features = get_geojson_features(business_data_frame)
     business_time_series_map.add_child(TimestampedGeoJson(
         {'type': 'FeatureCollection',
         'features': features}
@@ -140,10 +139,25 @@ def main():
         , date_options='MM/DD/YYYY'
         , duration="P1D"
     ))
-    df2 = business_data_frame.groupby(["License Start Date"]).count()
-    plot_businesses_over_time(df2)
-    bike_count_heat_map.save("bike_count_heat_map.html")
     business_time_series_map.save("business_time_series_map.html")
+
+
+def setup_folium_maps(business_data, bike_data):
+    setup_bike_count_heat_map(bike_data)
+    setup_business_time_series_map(business_data)
+
+
+def main():
+    data_path = f"{os.getcwd()}/data"
+    if not os.path.exists(f"{data_path}/Active_Business_Data_Modified.csv"):
+        prep_business_dataset()
+    business_data_frame = pd.read_csv(f"{data_path}/Active_Business_Data_Modified.csv", sep="\t")
+    business_data_by_date = prep_business_data_frame(business_data_frame)
+    bike_data_by_date, date_indices, bike_data_frames_list = prep_bike_count_datasets()
+    #setup_folium_maps(business_data_by_date, bike_data_by_date)
+    #plot_all_bike_count_data_over_time(bike_data_frames_list)
+    df2 = business_data_by_date.groupby(["License Start Date"]).count()
+    plot_businesses_over_time(df2)
 
 
 if __name__ == "__main__":
