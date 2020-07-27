@@ -1,5 +1,5 @@
 const path = `${__dirname}/../data/`;
-const {DataFrame }= require('dataframe-js')
+const { DataFrame } = require('dataframe-js')
 const moment = require('moment')
 
 const bike_count_locations = [
@@ -9,24 +9,24 @@ const bike_count_locations = [
       excess_cols: ["Fremont Bridge East Sidewalk", "Fremont Bridge West Sidewalk"],
       comb_cols: []
   },
-  // spokane_br = {
-  //     coordinates: [-122.349702, 47.571937],
-  //     file_name: "Spokane_St_Bridge_Bicycle_Counter",
-  //     excess_cols: ["West", "East"],
-  //     comb_cols: []
-  // },
-  // oregon_26th = {
-  //     coordinates: [-122.365739, 47.564988],
-  //     file_name: "26th_Ave_SW_Greenway_at_SW_Oregon_St_Bicycle_Counter",
-  //     excess_cols: ["North", "South"],
-  //     comb_cols: []
-  // },
-  // marion_2nd = {
-  //     coordinates: [-122.332660, 47.605026],
-  //     file_name: "2nd_Ave_Cycle_Track_North_of_Marion_St_Bicycle_Counter",
-  //     excess_cols: ["NB", "SB"],
-  //     comb_cols: []
-  // },
+  spokane_br = {
+      coordinates: [-122.349702, 47.571937],
+      file_name: "Spokane_St_Bridge_Bicycle_Counter",
+      excess_cols: ["West", "East"],
+      comb_cols: []
+  },
+  oregon_26th = {
+      coordinates: [-122.365739, 47.564988],
+      file_name: "26th_Ave_SW_Greenway_at_SW_Oregon_St_Bicycle_Counter",
+      excess_cols: ["North", "South"],
+      comb_cols: []
+  },
+  marion_2nd = {
+      coordinates: [-122.332660, 47.605026],
+      file_name: "2nd_Ave_Cycle_Track_North_of_Marion_St_Bicycle_Counter",
+      excess_cols: ["NB", "SB"],
+      comb_cols: []
+  },
    myrtle_ed_pk = { 
       coordinates: [-122.361754, 47.619657],
       file_name: "Elliott_Bay_Trail_in_Myrtle_Edwards_Park_Bicycle_and_Pedestrian_Counter",
@@ -67,9 +67,6 @@ const load_from_csv = async (path, location_data, dates) => {
 };
 
 (async () => {
-  const byDays = {};
-  const byWeeks = {};
-  const byMonths = {};
   let dates = []
   let date = min_date
   while (date <= max_date) {
@@ -109,5 +106,18 @@ const load_from_csv = async (path, location_data, dates) => {
   for (var i = 1; i < bike_data_frames.length; i++) {
     final_data_frame = final_data_frame.innerJoin(bike_data_frames[i], "Date")
   }
-  console.log(final_data_frame.getRow(1))
+  final_data_frame.toCSV(true, `${path}/clean_bike_data.csv`)
 })();
+
+
+
+// Clean business data 
+// 
+// (async = () => {
+//   let dates = []
+//   let date = min_date
+//   while (date <= max_date) {
+//     dates.push(date.format("MM/DD/Y"))
+//     date = date.add(1, 'd')
+//   }
+// })
