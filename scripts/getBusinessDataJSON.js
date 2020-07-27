@@ -3,12 +3,12 @@ const {DataFrame }= require('dataframe-js')
 const moment = require('moment')
 
 const bike_count_locations = [
-  // fremont_br = {
-  //     coordinates: [-122.349649, 47.647956 ],
-  //     file_name: "Fremont_Bridge_Bicycle_Counter",
-  //     excess_cols: ["Fremont Bridge East Sidewalk", "Fremont Bridge West Sidewalk"],
-  //     comb_cols: []
-  // },
+  fremont_br = {
+      coordinates: [-122.349649, 47.647956 ],
+      file_name: "Fremont_Bridge_Bicycle_Counter",
+      excess_cols: ["Fremont Bridge East Sidewalk", "Fremont Bridge West Sidewalk"],
+      comb_cols: []
+  },
   // spokane_br = {
   //     coordinates: [-122.349702, 47.571937],
   //     file_name: "Spokane_St_Bridge_Bicycle_Counter",
@@ -48,8 +48,9 @@ const load_from_csv = async (path, location_data, dates) => {
     for (var col in location_data.excess_cols) {
       df = df.drop(location_data.excess_cols[col])
     }
+    df = df.rename(df.listColumns()[1], "Total")
     df = df.cast(df.listColumns()[0], (val) => moment(val).format("MM/DD/Y"))
-    var final_df = new DataFrame([], ["Date", "Total"])
+    var final_df = new DataFrame([], ["Date", `Total ${location_data.file_name}`])
     for (var date in dates) {
       day_rows = df.filter(row => row.get(df.listColumns()[0]) == dates[date])
       var sum = 0
@@ -66,15 +67,47 @@ const load_from_csv = async (path, location_data, dates) => {
 };
 
 (async () => {
-  var bike_data_frames = []
-  var range_of_dates = []
-  var date = min_date
+  const byDays = {};
+  const byWeeks = {};
+  const byMonths = {};
+  let dates = []
+  let date = min_date
   while (date <= max_date) {
-    range_of_dates.push(date.format("MM/DD/Y"))
+    dates.push(date.format("MM/DD/Y"))
     date = date.add(1, 'd')
   }
+  
+  let bike_data_frames = []
   for (var location in bike_count_locations) {
-    bike_loc_data_frame = load_from_csv(`${path}${bike_count_locations[location].file_name}.csv`, bike_count_locations[location], range_of_dates)
-    comb_cols = bike_count_locations[location].comb_cols
+    await DataFrame.fromCSV(`${path}${bike_count_locations[location].file_name}.csv`).then(df => {
+      if (bike_count_locations[location].comb_cols && bike_count_locations[location].comb_cols.length) {
+        df = df.withColumn(bike_count_locations[location].comb_cols[0], (row) => String(parseInt(row.get(bike_count_locations[location].comb_cols[0])) + parseInt(row.get(bike_count_locations[location].comb_cols[1]))))
+        df = df.drop(bike_count_locations[location].comb_cols[1])
+        df = df.rename(bike_count_locations[location].comb_cols[0], "Total")
+      }
+      for (var col in bike_count_locations[location].excess_cols) {
+        df = df.drop(bike_count_locations[location].excess_cols[col])
+      }
+      df = df.rename(df.listColumns()[1], "Total")
+      df = df.cast(df.listColumns()[0], (val) => moment(val).format("MM/DD/Y"))
+      let final_df = new DataFrame([], ["Date", `Total ${bike_count_locations[location].file_name}`])
+      for (var date in dates) {
+        day_rows = df.filter(row => row.get(df.listColumns()[0]) == dates[date])
+        let sum = 0
+        let i = 0
+        while (i < day_rows.count()) {
+          val = parseInt(day_rows.getRow(i).select("Total").toArray()[0])
+          sum += val
+          i++
+        }
+        final_df = final_df.push([dates[date], sum])
+      }  
+      bike_data_frames.push(final_df)
+    })
   }
+  let final_data_frame = bike_data_frames[0]
+  for (var i = 1; i < bike_data_frames.length; i++) {
+    final_data_frame = final_data_frame.innerJoin(bike_data_frames[i], "Date")
+  }
+  console.log(final_data_frame.getRow(1))
 })();

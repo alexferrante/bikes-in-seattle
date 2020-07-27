@@ -78,6 +78,8 @@ class Mapbox extends React.Component {
       const geoJson = {
         "type": "geojson",
         "data": {
+            "type": "FeatureCollection",
+            "features": 
         
         }
       };
