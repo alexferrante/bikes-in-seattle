@@ -16,6 +16,7 @@ const lastDate = dates[dates.length - 1];
 const firstYear = moment(firstDate).year();
 const lastYear = moment(lastDate).year();
 
+
 class Mapbox extends React.Component {
     constructor(props) {
       super(props);

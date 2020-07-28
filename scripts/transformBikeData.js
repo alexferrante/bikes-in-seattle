@@ -41,24 +41,24 @@ const getId = (name) => {
     const filePath = path + filename;
     return csv().fromFile(filePath).subscribe(
       (obj) => {
-        const month = moment(obj.Date).format('YYYY-MM') + '-01';
-        const week = moment(obj.Date).endOf('week').subtract(1, 'day').format('YYYY-MM-DD');
-        let dateObj = byDays[obj.Date];
-        let weekObj = byWeeks[week];
-        let monthObj = byMonths[month];
-        if (!dateObj) {
-            byDays[obj.Date] = {};
-            dateObj = byDays[obj.Date];
-        }
-        if (!weekObj) {
-            byWeeks[week] = {};
-            weekObj = byWeeks[week];
-        }
-        if (!monthObj) {
-            byMonths[month] = {};
-            monthObj = byMonths[month];
-        }
         Object.keys(obj).forEach(function(key) {
+          const month = moment(obj.Date).format('YYYY-MM') + '-01';
+          const week = moment(obj.Date).endOf('week').subtract(1, 'day').format('YYYY-MM-DD');
+          let dateObj = byDays[obj.Date];
+          let weekObj = byWeeks[week];
+          let monthObj = byMonths[month];
+          if (!dateObj) {
+              byDays[obj.Date] = {};
+              dateObj = byDays[obj.Date];
+          }
+          if (!weekObj) {
+              byWeeks[week] = {};
+              weekObj = byWeeks[week];
+          }
+          if (!monthObj) {
+              byMonths[month] = {};
+              monthObj = byMonths[month];
+          }
             if (key != "Date") {
                 const convertedObj = toJSON(obj[key]);
                 let complexObj = byComplexId[getId(key)];
@@ -82,8 +82,8 @@ const getId = (name) => {
                         months: {},
                     }
                     complexObj = byComplexId[getId(key)];
-                    console.log(byComplexId)
                 }
+                // console.log(byComplexId)
                 let complexByWeek = complexObj.weeks[week];
                 let complexByMonth = complexObj.months[month];
                 if (!complexByWeek) {
@@ -107,7 +107,6 @@ const getId = (name) => {
       () => console.log('Wrote JSON')
     );
   }));
-
   let daysJSON = JSON.stringify(Object.keys(byDays));
   fs.writeFile(`${__dirname}/../src/data/days.json`, daysJSON, 'utf-8', (err) => {
     if (err) throw err;
