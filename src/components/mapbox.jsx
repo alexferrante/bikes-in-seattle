@@ -1,11 +1,20 @@
 import React from 'react';
 import mapboxgl from 'mapbox-gl';
 import { Responsive } from 'semantic-ui-react';
-import { debounce } from 'lodash';
+import { debounce, first } from 'lodash';
 import moment from 'moment';
 
+import bike_locations from '../data/bike_locations.json';
+import day_list from '../data/days.json';
+import week_list from '../data/weeks.json';
+
 const coords = [-122.3321, 47.6062]
-const lastDate = "2020-06-28";
+const dates = day_list;
+const weeks = week_list;
+const firstDate = dates[0];
+const lastDate = dates[dates.length - 1];
+const firstYear = moment(firstDate).year();
+const lastYear = moment(lastDate).year();
 
 class Mapbox extends React.Component {
     constructor(props) {
@@ -48,14 +57,24 @@ class Mapbox extends React.Component {
       });
     }
 
+    getLocData(dateObj, compareWithAnotherDate, compareDateObj, fieldName, complexId) {
+      if (!compareWithAnotherDate) {
+        return dateObj[complexId][fieldName];
+      }
+      if (!dateObj[complexId] || !compareDateObj[complexId]) {
+        return 0;
+      }
+      return ((dateObj[complexId][fieldName] - compareDateObj[complexId][fieldName]) / compareDateObj[complexId][fieldName]) * 100
+    }
+
   
     refreshMap() {
       const { selectedDate, compareWithDate, compareWithAnotherDate, durationMode } = this.state;
   
-      import(`./data/${durationMode}/${selectedDate}.json`)
+      import(`../data/${durationMode}/${selectedDate}.json`)
         .then(data => {
           if (compareWithAnotherDate) {
-            import(`./data/${durationMode}/${compareWithDate}.json`)
+            import(`../data/${durationMode}/${compareWithDate}.json`)
               .then(compareWithData => {
                  this.setState({ selectedDateObj: data, compareWithDateObj: compareWithData, isDataLoaded: true}, this.updateMap);
               });
@@ -64,7 +83,23 @@ class Mapbox extends React.Component {
           }
         });
     }
-  
+
+    selectCountLocation() {
+      const { selectedCountLoc, durationMode } = this.state;
+      import(`../data/complexId/${selectedCountLoc}.json`)
+        .then(data => {
+          this.setState({ selectedCountLocData: data, selectedCountLocObj: data[durationMode], isDataLoaded: true}, this.goToLoc);
+        });
+    }
+
+    goToLoc() {
+      const { selectedCountLoc } = this.state;
+      this.map.easeTo({
+        center: bike_locations[selectedCountLoc].coordinates,
+        bearing: 29,
+      });
+    }
+
     updateMap() {
       const {
         selectedDateObj,
@@ -73,22 +108,34 @@ class Mapbox extends React.Component {
         durationMode,
         mode,
       } = this.state;
+      const chosenLocations = Object.keys(bike_locations).filter((l) => selectedDateObj[l]);
       const visibleSystems = ['-'];
   
       const geoJson = {
         "type": "geojson",
         "data": {
             "type": "FeatureCollection",
-            "features": 
-        
-        }
+            "features": chosenLocations.map((l) => {
+              return {
+                "type": "Feature",
+                "properties": {
+                  "id": l,
+                  "count": this.getLocData(selectedDateObj, compareWithAnotherDate, compareWithDateObj, "count", l),
+                },
+                "geometry": {
+                  "type": "Point",
+                  "coordinates": bike_locations[l].coordinates,
+                }
+              }
+            })
+          }
       };
   
-      Object.keys(systems).forEach((s) => {
-        if (systems[s]) {
-          visibleSystems.push(s.toUpperCase());
-        }
-      });
+      // Object.keys(systems).forEach((s) => {
+      //   if (systems[s]) {
+      //     visibleSystems.push(s.toUpperCase());
+      //   }
+      // });
   
       if (this.map.getSource('data')) {
         this.map.getSource('data').setData(geoJson.data);
@@ -126,13 +173,13 @@ class Mapbox extends React.Component {
         ];
       }
   
-      const circleOpacityValue = [
-        'match', ['get', 'system'], visibleSystems, 0.5, 0
-      ]
+      // const circleOpacityValue = [
+      //   'match', ['get', 'system'], visibleSystems, 0.5, 0
+      // ]
   
       if (this.map.getLayer('data')) {
         this.map.setPaintProperty('data', 'circle-radius', circleRadiusValue);
-        this.map.setPaintProperty('data', 'circle-opacity', circleOpacityValue);
+        // this.map.setPaintProperty('data', 'circle-opacity', circleOpacityValue);
         this.map.setPaintProperty('data', 'circle-color', circleColorValue);
       } else {
         this.map.addLayer({
@@ -142,7 +189,7 @@ class Mapbox extends React.Component {
           'paint': {
             'circle-radius': circleRadiusValue,
             'circle-color': circleColorValue,
-            'circle-opacity': circleOpacityValue
+            // 'circle-opacity': circleOpacityValue
           },
         });
       }

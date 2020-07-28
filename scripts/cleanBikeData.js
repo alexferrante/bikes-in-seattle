@@ -1,6 +1,7 @@
 const path = `${__dirname}/../data/`;
 const { DataFrame } = require('dataframe-js')
 const moment = require('moment')
+const fs = require('fs')
 
 const bike_count_locations = [
   fremont_br = {
@@ -38,39 +39,18 @@ const bike_count_locations = [
 const min_date = moment([2015, 1, 1])
 const max_date = moment([2020, 6, 30])
 
-const load_from_csv = async (path, location_data, dates) => {
-  DataFrame.fromCSV(path).then(df => {
-    if (location_data.comb_cols.length != 0) {
-      df = df.withColumn(comb_cols[0], (row) => String(parseInt(row.get(comb_cols[0])) + parseInt(row.get(comb_cols[1]))))
-      df = df.drop(comb_cols[1])
-      df = df.rename(comb_cols[0], "Total")
-    }
-    for (var col in location_data.excess_cols) {
-      df = df.drop(location_data.excess_cols[col])
-    }
-    df = df.rename(df.listColumns()[1], "Total")
-    df = df.cast(df.listColumns()[0], (val) => moment(val).format("MM/DD/Y"))
-    var final_df = new DataFrame([], ["Date", `Total ${location_data.file_name}`])
-    for (var date in dates) {
-      day_rows = df.filter(row => row.get(df.listColumns()[0]) == dates[date])
-      var sum = 0
-      var i = 0
-      while (i < day_rows.count()) {
-        val = parseInt(day_rows.getRow(i).select("Total").toArray()[0])
-        sum += val
-        i++
-      }
-      final_df = final_df.push([dates[date], sum])
-    }
-    return df
-  })
-};
+const toJSON = (obj) => {
+  return {
+    name: obj.file_name,
+    coordinates: obj.coordinates
+  };
+}
 
 (async () => {
   let dates = []
   let date = min_date
   while (date <= max_date) {
-    dates.push(date.format("MM/DD/Y"))
+    dates.push(date.format("Y-MM-DD"))
     date = date.add(1, 'd')
   }
   
@@ -86,7 +66,7 @@ const load_from_csv = async (path, location_data, dates) => {
         df = df.drop(bike_count_locations[location].excess_cols[col])
       }
       df = df.rename(df.listColumns()[1], "Total")
-      df = df.cast(df.listColumns()[0], (val) => moment(val).format("MM/DD/Y"))
+      df = df.cast(df.listColumns()[0], (val) => moment(val).format("Y-MM-DD"))
       let final_df = new DataFrame([], ["Date", `Total ${bike_count_locations[location].file_name}`])
       for (var date in dates) {
         day_rows = df.filter(row => row.get(df.listColumns()[0]) == dates[date])
@@ -107,6 +87,17 @@ const load_from_csv = async (path, location_data, dates) => {
     final_data_frame = final_data_frame.innerJoin(bike_data_frames[i], "Date")
   }
   final_data_frame.toCSV(true, `${path}/clean_bike_data.csv`)
+
+  const locations = {}
+  for (var loc in bike_count_locations) {
+    let obj = toJSON(bike_count_locations[loc])
+    locations[loc] = obj
+  }
+  const complexJson = JSON.stringify(locations);
+  fs.writeFile(`${__dirname}/../src/data/bike_locations.json`, complexJson, 'utf8', (err) => {
+    if (err) throw err;
+  });
+  
 })();
 
 
