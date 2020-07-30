@@ -36,4 +36,5 @@ module.exports = {
     hot: true,
   },
   plugins: [new webpack.HotModuleReplacementPlugin()],
+  devtool : "eval-cheap-source-map",
 };

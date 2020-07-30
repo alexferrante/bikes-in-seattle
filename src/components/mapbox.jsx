@@ -4,6 +4,8 @@ import { Responsive } from 'semantic-ui-react';
 import { debounce, first } from 'lodash';
 import moment from 'moment';
 
+import SettingsContainer from './settingsContainer';
+import DataBox from './dataBox'
 import bike_locations from '../data/bike_locations.json';
 import day_list from '../data/days.json';
 import week_list from '../data/weeks.json';
@@ -16,6 +18,7 @@ const lastDate = dates[dates.length - 1];
 const firstYear = moment(firstDate).year();
 const lastYear = moment(lastDate).year();
 
+mapboxgl.accessToken = "pk.eyJ1IjoiZmVycm5hIiwiYSI6ImNrZDF2d3ZlejE3bHIyeXBqenc4MXIzenkifQ.ZmJ7t_O6gR-kLEWGpVPEJQ";
 
 class Mapbox extends React.Component {
     constructor(props) {
@@ -26,7 +29,7 @@ class Mapbox extends React.Component {
         selectedBusiness: null,
         selectedBusinessData: null,
         selectedBusinessObj: null,
-        selectedCountLoc: null,
+        selectedCountLoc: "0",
         selectedCountLocData: null,
         selectedCountLocObj: null,
         durationMode: 'days',
@@ -42,13 +45,11 @@ class Mapbox extends React.Component {
     componentDidMount() {
       this.map = new mapboxgl.Map({
         container: this.mapContainer,
-        style: 'mapbox://styles/mapbox/streets-v11',
+        style: 'mapbox://styles/mapbox/light-v10',
         center: coords,
-        bearing: 29,
         minZoom: 9,
         zoom: 13,
         hash: false,
-        maxPitch: 0,
       });
   
       this.map.addControl(new mapboxgl.NavigationControl(), "bottom-right");
@@ -89,6 +90,7 @@ class Mapbox extends React.Component {
       const { selectedCountLoc, durationMode } = this.state;
       import(`../data/complexId/${selectedCountLoc}.json`)
         .then(data => {
+          console.log(data)
           this.setState({ selectedCountLocData: data, selectedCountLocObj: data[durationMode], isDataLoaded: true}, this.goToLoc);
         });
     }
@@ -110,7 +112,6 @@ class Mapbox extends React.Component {
         mode,
       } = this.state;
       const chosenLocations = Object.keys(bike_locations).filter((l) => selectedDateObj[l]);
-      const visibleSystems = ['-'];
   
       const geoJson = {
         "type": "geojson",
@@ -336,6 +337,8 @@ class Mapbox extends React.Component {
         isDataBoxVisible,
         isDataLoaded,
         selectedDate,
+        compareWithAnotherDate,
+        compareWithDate,
         selectedDateObj,
         selectedCountLoc,
         selectedCountLocObj,
@@ -346,8 +349,22 @@ class Mapbox extends React.Component {
       } = this.state;
       return (
         <Responsive as='div' fireOnMount onUpdate={this.handleOnUpdate}>
-          <div ref={el => this.mapContainer = el} className='mapbox'>
-          </div>
+          <div ref={el => this.mapContainer = el} className='mapbox'></div>
+          <SettingsContainer mode={mode} weeks={weeks} durationMode={durationMode} handleModeClick={this.handleModeClick} handleDurationModeClick={this.handleDurationModeClick}
+          isMobile={isMobile} firstDate={firstDate} lastDate={lastDate} selectedDate={selectedDate}
+          compareWithAnotherDate={compareWithAnotherDate} handleToggle={this.handleToggle} compareWithDate={compareWithDate} handleToggleDataBox={this.handleToggleDataBox}
+          handleDateInputChange={this.handleDateInputChange} handleCompareDateInputChange={this.handleCompareDateInputChange}>
+          </SettingsContainer>
+          { (!isMobile || isDataBoxVisible) &&
+          <DataBox mode={mode} durationMode={durationMode}
+            selectedCountLoc={selectedCountLoc} selectedBusiness={selectedBusiness} selectedCountLocObj={selectedCountLocObj} selectedBusinessObj={selectedBusinessObj} isMobile={isMobile}
+            selectedDate={selectedDate} selectedDateObj={selectedDateObj}
+            compareWithDate={compareWithAnotherDate && compareWithDate} compareWithDateObj={compareWithAnotherDate && compareWithDateObj}
+            firstYear={firstYear} lastYear={lastYear} handleToggle={this.handleToggle} isDataLoaded={isDataLoaded}
+            handleYearChange={this.handleYearChange}
+            handleSelectCountLoc={this.handleSelectCountLoc} handleSelectBusinessLoc={this.handleSelectBusinessLoc} handleBack={this.handleBack} handleGraphClick={this.handleGraphClick} />
+          }
+        
         </Responsive>
       )
     }
