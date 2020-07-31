@@ -340,6 +340,7 @@ class Mapbox extends React.Component {
         selectedDate,
         compareWithAnotherDate,
         compareWithDate,
+        compareWithDateObj,
         selectedDateObj,
         selectedCountLoc,
         selectedCountLocObj,

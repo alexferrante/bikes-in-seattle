@@ -7,14 +7,8 @@ import './styles.scss';
 import "react-datepicker/dist/react-datepicker.css";
 
 const significantDates = [
-  '2020-03-12', // geatherings banned
-  '2020-03-16', // NYC schools close
-  '2020-03-22', // PAUSE
-  '2020-05-06', // subway suspends overnight service
-  '2020-06-01', // curfew
-  '2020-06-08', // phase 1
-  '2020-06-22', // phase 2
-  '2020-07-06', // phase 3
+  '2020-03-12', 
+  '2020-03-16', 
 ]
 
 class SettingsContainer extends React.Component {

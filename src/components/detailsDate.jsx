@@ -10,13 +10,9 @@ class DetailsDate extends React.Component {
         <Divider horizontal>
           <Header size='medium'>{ durationModeDate(selectedDate, durationMode, 'big') }</Header>
         </Divider>
-        <Statistic.Group widths={2} size={isMobile ? 'mini' : 'tiny'}>
+        <Statistic.Group widths={1} size={isMobile ? 'mini' : 'tiny'}>
           <Statistic>
-            <Statistic.Label>Count</Statistic.Label>
-            <Statistic.Value>{ data ? data.count.toLocaleString('en-US') : 0 }</Statistic.Value>
-          </Statistic>
-          <Statistic>
-            <Statistic.Label>Exits</Statistic.Label>
+            <Statistic.Label>Bicycle Count</Statistic.Label>
             <Statistic.Value>{ data ? data.count.toLocaleString('en-US') : 0 }</Statistic.Value>
           </Statistic>
         </Statistic.Group>
