@@ -5,45 +5,25 @@ import { durationModeDate } from './utils';
 class DetailsCompareDates extends React.Component {
   render() {
     const { isMobile, selectedDate, compareWithDate, selectedDateObj, compareWithDateObj, durationMode } = this.props;
-    const compareWithEntries = compareWithDateObj ? compareWithDateObj.count : 0;
-    const selectedEntries = selectedDateObj ? selectedDateObj.count : 0;
-    const entriesChange = (selectedEntries - compareWithEntries) / compareWithEntries * 100;
-    const compareWithExits = compareWithDateObj ? compareWithDateObj.count : 0;
-    const selectedExits = selectedDateObj ? selectedDateObj.count : 0;
-    const exitsChange = (selectedExits - compareWithExits) / compareWithExits * 100;
+    const compareWithCount = compareWithDateObj ? compareWithDateObj.count : 0;
+    const selectedCount = selectedDateObj ? selectedDateObj.count : 0;
+    const countDiff = (selectedCount - compareWithCount) / compareWithCount * 100;
     return (
       <div>
         <Divider horizontal>
-          <Header size='medium'>Entries</Header>
+          <Header size='medium'>Count</Header>
         </Divider>
         <Statistic.Group widths={isMobile ? 2 : 3} size='mini'>
           <Statistic>
-            <Statistic.Value>{ compareWithEntries.toLocaleString('en-US') }</Statistic.Value>
+            <Statistic.Value>{ compareWithCount.toLocaleString('en-US') }</Statistic.Value>
             <Statistic.Label>{ durationModeDate(compareWithDate, durationMode, 'small') }</Statistic.Label>
           </Statistic>
           <Statistic>
-            <Statistic.Value>{ selectedEntries.toLocaleString('en-US') }</Statistic.Value>
+            <Statistic.Value>{ selectedCount.toLocaleString('en-US') }</Statistic.Value>
             <Statistic.Label>{ durationModeDate(selectedDate, durationMode, 'small') }</Statistic.Label>
           </Statistic>
-          <Statistic color={entriesChange >= 0 ? "green" : "red" }>
-            <Statistic.Value>{ entriesChange >= 0 && '+'}{ Math.round(entriesChange * 100) / 100}%</Statistic.Value>
-            <Statistic.Label>Change</Statistic.Label>
-          </Statistic>
-        </Statistic.Group>
-        <Divider horizontal>
-          <Header size='medium'>Exits</Header>
-        </Divider>
-        <Statistic.Group widths={isMobile ? 2 : 3} size='mini'>
-          <Statistic>
-            <Statistic.Value>{ compareWithExits.toLocaleString('en-US') }</Statistic.Value>
-            <Statistic.Label>{ durationModeDate(compareWithDate, durationMode, 'small') }</Statistic.Label>
-          </Statistic>
-          <Statistic>
-            <Statistic.Value>{ selectedExits.toLocaleString('en-US') }</Statistic.Value>
-            <Statistic.Label>{ durationModeDate(selectedDate, durationMode, 'small') }</Statistic.Label>
-          </Statistic>
-          <Statistic color={exitsChange >= 0 ? "green" : "red" }>
-            <Statistic.Value>{ exitsChange >= 0 && '+'}{ Math.round(exitsChange * 100) / 100}%</Statistic.Value>
+          <Statistic color={countDiff >= 0 ? "green" : "red" }>
+            <Statistic.Value>{ countDiff >= 0 && '+'}{ Math.round(countDiff * 100) / 100}%</Statistic.Value>
             <Statistic.Label>Change</Statistic.Label>
           </Statistic>
         </Statistic.Group>

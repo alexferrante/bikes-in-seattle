@@ -6,7 +6,6 @@ import DetailsDate from './detailsDate';
 import DetailsCompareDates from './detailsCompareDates';
 import CountGraph from './countGraph';
 import { selectYearOptions, durationModeAdjective } from './utils';
-
 import bike_locations from '../data/bike_locations.json';
 
 class BikeLocDetails extends React.Component {

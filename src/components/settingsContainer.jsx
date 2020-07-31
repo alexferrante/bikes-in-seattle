@@ -2,6 +2,7 @@ import React from 'react';
 import { Grid, Segment, Header, Form, Menu, Checkbox, Divider, Button, Icon } from "semantic-ui-react";
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
+import './styles.scss';
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -111,8 +112,7 @@ class SettingsContainer extends React.Component {
         <Divider horizontal hidden />
         <Form inverted>
           <Menu inverted fluid widths={2} size='mini'>
-            <Menu.Item name='entries' active={mode === 'entries'} onClick={handleModeClick} />
-            <Menu.Item name='exits' active={mode === 'exits'} onClick={handleModeClick} />
+            <Menu.Item name="count" active={mode === "count"} onClick={handleModeClick} />
           </Menu>
           <Grid columns={2}>
             <Grid.Row>

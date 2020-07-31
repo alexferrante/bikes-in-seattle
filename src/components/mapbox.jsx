@@ -9,6 +9,7 @@ import DataBox from './dataBox'
 import bike_locations from '../data/bike_locations.json';
 import day_list from '../data/days.json';
 import week_list from '../data/weeks.json';
+import './mapbox.css';
 
 const coords = [-122.3321, 47.6062]
 const dates = day_list;
@@ -33,7 +34,7 @@ class Mapbox extends React.Component {
         selectedCountLocData: null,
         selectedCountLocObj: null,
         durationMode: 'days',
-        mode: 'entries',
+        mode: "count",
         compareWithAnotherDate: false,
         compareWithDate: moment(lastDate).subtract(52, 'week').format('YYYY-MM-DD'),
         compareWithDateObj: null,
@@ -350,11 +351,11 @@ class Mapbox extends React.Component {
       return (
         <Responsive as='div' fireOnMount onUpdate={this.handleOnUpdate}>
           <div ref={el => this.mapContainer = el} className='mapbox'></div>
-          <SettingsContainer mode={mode} weeks={weeks} durationMode={durationMode} handleModeClick={this.handleModeClick} handleDurationModeClick={this.handleDurationModeClick}
+          {<SettingsContainer mode={mode} weeks={weeks} durationMode={durationMode} handleModeClick={this.handleModeClick} handleDurationModeClick={this.handleDurationModeClick}
           isMobile={isMobile} firstDate={firstDate} lastDate={lastDate} selectedDate={selectedDate}
           compareWithAnotherDate={compareWithAnotherDate} handleToggle={this.handleToggle} compareWithDate={compareWithDate} handleToggleDataBox={this.handleToggleDataBox}
           handleDateInputChange={this.handleDateInputChange} handleCompareDateInputChange={this.handleCompareDateInputChange}>
-          </SettingsContainer>
+          </SettingsContainer>}
           { (!isMobile || isDataBoxVisible) &&
           <DataBox mode={mode} durationMode={durationMode}
             selectedCountLoc={selectedCountLoc} selectedBusiness={selectedBusiness} selectedCountLocObj={selectedCountLocObj} selectedBusinessObj={selectedBusinessObj} isMobile={isMobile}
@@ -364,7 +365,6 @@ class Mapbox extends React.Component {
             handleYearChange={this.handleYearChange}
             handleSelectCountLoc={this.handleSelectCountLoc} handleSelectBusinessLoc={this.handleSelectBusinessLoc} handleBack={this.handleBack} handleGraphClick={this.handleGraphClick} />
           }
-        
         </Responsive>
       )
     }

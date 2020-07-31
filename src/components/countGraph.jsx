@@ -1,5 +1,5 @@
 import React from 'react';
-
+import './styles.scss';
 import Graph from './graph';
 
 class CountGraph extends React.Component {

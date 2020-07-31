@@ -1,0 +1,26 @@
+.databox {
+    display: block;
+    position: absolute !important;
+    top: 230px;
+    left: 10px;
+    bottom: auto;
+    width: 500px;
+    padding: 10px !important;
+    max-height: calc(100% - 220px);
+    border-radius: 1rem !important;
+  }
+
+  .inner-databox {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    width: 480px;
+    max-height: 60vh;
+  }
+
+  h3 {
+    margin-top: 10px;
+  }
+
+  .ui.checkbox {
+    margin-right: 10px;
+  }

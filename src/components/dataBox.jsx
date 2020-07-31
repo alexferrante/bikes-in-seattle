@@ -1,8 +1,8 @@
 import React from 'react';
 import { Segment, Header, Dimmer, Loader } from "semantic-ui-react";
-
 // import OverallDetails from './overallDetails';
 import BikeLocDetails from './bikeLocDetails';
+import './dataBox.css'
 
 class DataBox extends React.Component {
   componentDidUpdate(prevProps) {
@@ -45,15 +45,17 @@ class DataBox extends React.Component {
         }
         <div className='inner-databox' ref={el => this.dataBox = el}>
           <Segment>
-                <BikeLocDetails isMobile={isMobile}
-                  selectedCountLoc={selectedCountLoc} selectedCountLocObj={selectedCountLocObj}
-                  selectedBusiness={selectedBusiness} selectedBusinessObj={selectedBusinessObj}
-                  selectedDate={selectedDate} durationMode={durationMode}
-                  compareWithDate={compareWithDate}
-                  firstYear={firstYear} lastYear={lastYear}
-                  handleYearChange={handleYearChange} handleBack={handleBack}
-                  handleGraphClick={handleGraphClick} /> 
-
+            { selectedCountLoc && selectedCountLocObj ?
+              <BikeLocDetails isMobile={isMobile}
+                selectedDate={selectedDate} durationMode={durationMode}
+                compareWithDate={compareWithDate}
+                selectedCountLoc={selectedCountLoc} selectedCountLocObj={selectedCountLocObj}
+                selectedBusiness={selectedBusiness} selectedBusinessObj={selectedBusinessObj}
+                firstYear={firstYear} lastYear={lastYear}
+                handleBack={handleBack}
+                handleGraphClick={handleGraphClick} handleYearChange={handleYearChange}/> :
+                <div></div>
+            }
           </Segment>
         </div>
       </Segment>
