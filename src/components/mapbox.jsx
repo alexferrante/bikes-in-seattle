@@ -19,7 +19,7 @@ const lastDate = dates[dates.length - 1];
 const firstYear = moment(firstDate).year();
 const lastYear = moment(lastDate).year();
 
-mapboxgl.accessToken = "pk.eyJ1IjoiZmVycm5hIiwiYSI6ImNrZDF2d3ZlejE3bHIyeXBqenc4MXIzenkifQ.ZmJ7t_O6gR-kLEWGpVPEJQ";
+mapboxgl.accessToken = process.env.MAPBOX_KEY;
 
 class Mapbox extends React.Component {
     constructor(props) {
