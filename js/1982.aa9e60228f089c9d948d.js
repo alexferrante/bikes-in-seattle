@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[1982],{2871:function(n){n.exports=JSON.parse('{"0":{"count":3509},"1":{"count":1472},"2":{"count":0},"3":{"count":584},"4":{"count":1711}}')}}]);
+//# sourceMappingURL=1982.aa9e60228f089c9d948d.js.map
