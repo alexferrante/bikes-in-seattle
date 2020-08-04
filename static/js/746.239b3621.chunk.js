@@ -1,2 +1,0 @@
-(this["webpackJsonpbikes-in-seattle"]=this["webpackJsonpbikes-in-seattle"]||[]).push([[746],{1415:function(t){t.exports=JSON.parse('{"0":{"count":584},"1":{"count":73},"2":{"count":3},"3":{"count":48},"4":{"count":99}}')}}]);
-//# sourceMappingURL=746.239b3621.chunk.js.map
