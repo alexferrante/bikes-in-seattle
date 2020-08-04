@@ -1,0 +1,21 @@
+.station-details .top {
+    display: flex;
+  
+    h3.ui.header {
+      margin-bottom: 5px;
+    }
+  }
+
+  .details-graph-header {
+    display: flex;
+    align-items: center;
+  
+    .icon-container {
+      display: flex;
+      align-items: flex-start;
+  
+      i.icon:only-child {
+        margin-right: 0;
+      }
+    }
+  }

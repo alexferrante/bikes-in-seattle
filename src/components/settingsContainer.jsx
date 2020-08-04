@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Segment, Header, Form, Menu, Checkbox, Divider, Button, Icon } from "semantic-ui-react";
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
-import './styles.scss';
+import style from './settingsContainer.scss';
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -38,9 +38,9 @@ class SettingsContainer extends React.Component {
 
     if (durationMode === 'days') {
       return (
-        <div className={outerClassName}>
+        <div className={style[outerClassName]}>
           <DatePicker
-            className={className}
+            className={style[className]}
             name={name}
             dateFormat='yyyy-MM-dd'
             filterDate={isCompareWithDate && this.filterSelectedDate.bind(this)}
@@ -56,9 +56,9 @@ class SettingsContainer extends React.Component {
       )
     } else if (durationMode === 'weeks') {
       return (
-        <div className={outerClassName}>
+        <div className={style[outerClassName]}>
           <DatePicker
-            className={className}
+            className={style[className]}
             name={name}
             dateFormat='yyyy-MM-dd'
             filterDate={isCompareWithDate ? this.filterFridaysAndSelectedDate.bind(this) : this.filterFridays.bind(this)}
@@ -75,9 +75,9 @@ class SettingsContainer extends React.Component {
     } else {
       const displayDate = moment(dateValue);
       return (
-        <div className={outerClassName}>
+        <div className={style[outerClassName]}>
           <DatePicker
-            className={className}
+            className={style[className]}
             startMode='year'
             name={name}
             filterDate={isCompareWithDate && this.filterSelectedDate.bind(this)}
@@ -98,7 +98,7 @@ class SettingsContainer extends React.Component {
     const { durationMode, mode, isMobile, handleModeClick, handleDurationModeClick, compareWithAnotherDate,
       handleToggle, handleDateInputChange, handleToggleDataBox, handleCompareDateInputChange } = this.props;
     return (
-      <Segment inverted vertical className="configbox">
+      <Segment inverted vertical className={style["configbox"]}>
         <div>
           <Header inverted as={isMobile ? 'h3' : 'h1'} color='blue'>  
           </Header>
@@ -137,7 +137,7 @@ class SettingsContainer extends React.Component {
         </Form>
         { isMobile &&
           <Button icon
-            className="mobile-data-box-control" onClick={handleToggleDataBox}
+            className={style["mobile-data-box-control"]} onClick={handleToggleDataBox}
             title="Expand/Collapse">
             <Icon name='sort'/>
           </Button>

@@ -9,7 +9,7 @@ import DataBox from './dataBox'
 import bike_locations from '../data/bike_locations.json';
 import day_list from '../data/days.json';
 import week_list from '../data/weeks.json';
-import './mapbox.css';
+import style from './mapbox.css';
 
 const coords = [-122.3321, 47.6062]
 const dates = day_list;
@@ -19,7 +19,7 @@ const lastDate = dates[dates.length - 1];
 const firstYear = moment(firstDate).year();
 const lastYear = moment(lastDate).year();
 
-mapboxgl.accessToken = process.env.MAPBOX_KEY;
+mapboxgl.accessToken = "pk.eyJ1IjoiZmVycm5hIiwiYSI6ImNrZDF2d3ZlejE3bHIyeXBqenc4MXIzenkifQ.ZmJ7t_O6gR-kLEWGpVPEJQ";
 
 class Mapbox extends React.Component {
     constructor(props) {
@@ -351,7 +351,7 @@ class Mapbox extends React.Component {
       } = this.state;
       return (
         <Responsive as='div' fireOnMount onUpdate={this.handleOnUpdate}>
-          <div ref={el => this.mapContainer = el} className='mapbox'></div>
+          <div ref={el => this.mapContainer = el} className={style['mapbox']}></div>
           {<SettingsContainer mode={mode} weeks={weeks} durationMode={durationMode} handleModeClick={this.handleModeClick} handleDurationModeClick={this.handleDurationModeClick}
           isMobile={isMobile} firstDate={firstDate} lastDate={lastDate} selectedDate={selectedDate}
           compareWithAnotherDate={compareWithAnotherDate} handleToggle={this.handleToggle} compareWithDate={compareWithDate} handleToggleDataBox={this.handleToggleDataBox}
