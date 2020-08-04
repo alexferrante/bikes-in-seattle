@@ -1,6 +1,7 @@
 import React from 'react';
 import { Statistic, Divider, Header } from "semantic-ui-react";
 import { durationModeDate } from './utils';
+import 'semantic-ui-css/semantic.css';
 
 class DetailsCompareDates extends React.Component {
   render() {

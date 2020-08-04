@@ -1,7 +1,7 @@
 import React from 'react';
 import mapboxgl from 'mapbox-gl';
 import { Responsive } from 'semantic-ui-react';
-import { debounce, first } from 'lodash';
+import { debounce } from 'lodash';
 import moment from 'moment';
 
 import SettingsContainer from './settingsContainer';
@@ -9,7 +9,7 @@ import DataBox from './dataBox'
 import bike_locations from '../data/bike_locations.json';
 import day_list from '../data/days.json';
 import week_list from '../data/weeks.json';
-import style from './mapbox.css';
+import './mapbox.css';
 
 const coords = [-122.3321, 47.6062]
 const dates = day_list;
@@ -100,7 +100,6 @@ class Mapbox extends React.Component {
       const { selectedCountLoc } = this.state;
       this.map.easeTo({
         center: bike_locations[selectedCountLoc].coordinates,
-        bearing: 29,
       });
     }
 
@@ -351,7 +350,7 @@ class Mapbox extends React.Component {
       } = this.state;
       return (
         <Responsive as='div' fireOnMount onUpdate={this.handleOnUpdate}>
-          <div ref={el => this.mapContainer = el} className={style['mapbox']}></div>
+          <div ref={el => this.mapContainer = el} className='mapbox'></div>
           {<SettingsContainer mode={mode} weeks={weeks} durationMode={durationMode} handleModeClick={this.handleModeClick} handleDurationModeClick={this.handleDurationModeClick}
           isMobile={isMobile} firstDate={firstDate} lastDate={lastDate} selectedDate={selectedDate}
           compareWithAnotherDate={compareWithAnotherDate} handleToggle={this.handleToggle} compareWithDate={compareWithDate} handleToggleDataBox={this.handleToggleDataBox}

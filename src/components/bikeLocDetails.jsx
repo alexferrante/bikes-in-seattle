@@ -7,7 +7,8 @@ import DetailsCompareDates from './detailsCompareDates';
 import CountGraph from './countGraph';
 import { selectYearOptions, durationModeAdjective } from './utils';
 import bike_locations from '../data/bike_locations.json';
-import style from './bikeLocDetails.scss'
+import './bikeLocDetails.scss'
+import 'semantic-ui-css/semantic.css';
 
 class BikeLocDetails extends React.Component {
   constructor(props) {
@@ -46,14 +47,14 @@ class BikeLocDetails extends React.Component {
     const { width, height } = this.state;
     const selectedYear = moment(selectedDate).year();
     return (
-      <div className={style['station-details']}>
-        <div className={style['top']}>
+      <div className='station-details'>
+        <div className='top'>
           <div>
             <Button icon onClick={handleBack} title="Back">
               <Icon name='arrow left' />
             </Button>
           </div>
-          <div className={style['heading']}>
+          <div className='heading'>
             <Header as="h3">
               {/* {bike_locations[selectedCountLoc].name } */}
             </Header>
@@ -67,12 +68,12 @@ class BikeLocDetails extends React.Component {
             <DetailsDate isMobile={isMobile} data={selectedCountLocObj[selectedDate]} selectedDate={selectedDate} durationMode={durationMode} />
         }
         <Divider horizontal>
-          <Header size='medium' className={style['details-graph-header']}>
+          <Header size='medium' className='details-graph-header'>
             <div>
               { durationModeAdjective(durationMode) } Counts in&nbsp;
             </div>
             <Dropdown inline options={selectYearOptions(firstYear, lastYear)} value={selectedYear} selectOnNavigation={false} onChange={handleYearChange} />
-            <Modal trigger={<div className={style['icon-container']}><Icon name='external' size='small' title='Expand graph' link /></div>} size='fullscreen' closeIcon>
+            <Modal trigger={<div className='icon-container'><Icon name='external' size='small' title='Expand graph' link /></div>} size='fullscreen' closeIcon>
               <Modal.Header>
                 { durationModeAdjective(durationMode) } Counts in&nbsp;
                 <Dropdown inline options={selectYearOptions(firstYear, lastYear)} value={selectedYear} selectOnNavigation={false} onChange={handleYearChange} />

@@ -1,8 +1,8 @@
 import React from 'react';
-import { Segment, Header, Dimmer, Loader } from "semantic-ui-react";
-// import OverallDetails from './overallDetails';
+import { Segment, Dimmer, Loader } from "semantic-ui-react";
 import BikeLocDetails from './bikeLocDetails';
-import style from './dataBox.css'
+import './dataBox.css'
+import 'semantic-ui-css/semantic.css';
 
 class DataBox extends React.Component {
   componentDidUpdate(prevProps) {
@@ -36,14 +36,14 @@ class DataBox extends React.Component {
       handleYearChange,
     } = this.props;
     return (
-      <Segment inverted vertical className={style["databox"]}>
+      <Segment inverted vertical className="databox">
         {
           !isDataLoaded &&
           <Dimmer active>
             <Loader inverted></Loader>
           </Dimmer>
         }
-        <div className={style['inner-databox']} ref={el => this.dataBox = el}>
+        <div className='inner-databox' ref={el => this.dataBox = el}>
           <Segment>
             { selectedCountLoc && selectedCountLocObj ?
               <BikeLocDetails isMobile={isMobile}

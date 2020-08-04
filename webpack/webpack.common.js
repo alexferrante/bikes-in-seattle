@@ -36,10 +36,6 @@ module.exports = {
           },
         ],
       },
-      {
-        test: /\.ico$/,
-        loader: 'file-loader'
-      },
     ],
   },
   serve: {

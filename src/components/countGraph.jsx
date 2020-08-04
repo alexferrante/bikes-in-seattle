@@ -1,6 +1,7 @@
 import React from 'react';
 import './styles.scss';
 import Graph from './graph';
+import 'semantic-ui-css/semantic.css';
 
 class CountGraph extends React.Component {
   graphData() {
