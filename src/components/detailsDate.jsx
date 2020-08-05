@@ -1,8 +1,7 @@
 import React from 'react';
 import { Statistic, Divider, Header } from "semantic-ui-react";
 import { durationModeDate } from './utils';
-import 'semantic-ui-css/semantic.css';
-
+import 'semantic-ui-css/semantic.min.css';
 class DetailsDate extends React.Component {
   render() {
     const { data, selectedDate, isMobile, durationMode } = this.props;

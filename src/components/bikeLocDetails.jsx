@@ -47,7 +47,7 @@ class BikeLocDetails extends React.Component {
     const { width, height } = this.state;
     const selectedYear = moment(selectedDate).year();
     return (
-      <div className='station-details'>
+      <div className='loc-details'>
         <div className='top'>
           <div>
             <Button icon onClick={handleBack} title="Back">
@@ -56,7 +56,7 @@ class BikeLocDetails extends React.Component {
           </div>
           <div className='heading'>
             <Header as="h3">
-              {/* {bike_locations[selectedCountLoc].name } */}
+              {bike_locations[selectedCountLoc].name.replace(/_/g, " ")}
             </Header>
           </div>
         </div>
@@ -78,13 +78,13 @@ class BikeLocDetails extends React.Component {
                 { durationModeAdjective(durationMode) } Counts in&nbsp;
                 <Dropdown inline options={selectYearOptions(firstYear, lastYear)} value={selectedYear} selectOnNavigation={false} onChange={handleYearChange} />
               </Modal.Header>
-              <Responsive as={Modal.Content} getWidth={this.handleGetWidth} onUpdate={this.handleOnUpdate} fireOnMount>
+              <Responsive as={Modal.Content} getWidth={this.handleGetWidth} onUpdate={this.handleOnUpdate} fireOnMount className="graph-container">
                 <CountGraph isMobile={isMobile} complexData={selectedCountLocObj} handleGraphClick={handleGraphClick} selectedYear={selectedYear} width={width} height={height} />
               </Responsive>
             </Modal>
           </Header>
         </Divider>
-        <div>
+        <div className="graph-container">
           <CountGraph isMobile={isMobile} durationMode={durationMode} complexData={selectedCountLocObj} handleGraphClick={handleGraphClick} selectedYear={selectedYear} />
         </div>
       </div>

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Segment, Dimmer, Loader } from "semantic-ui-react";
 import BikeLocDetails from './bikeLocDetails';
-import './dataBox.css'
-import 'semantic-ui-css/semantic.css';
+import './dataBox.scss'
+import 'semantic-ui-css/semantic.min.css';
 
 class DataBox extends React.Component {
   componentDidUpdate(prevProps) {

@@ -12,7 +12,7 @@ class Graph extends React.Component {
     if (width) {
       return width - (isMobile ? 70 : 200);
     }
-    return isMobile ? 270 : 440;
+    return isMobile ? 200 : 400;
   }
 
   height() {

@@ -10,9 +10,9 @@
     top: 10px;
     left: 10px;
     bottom: auto;
-    width: 500px;
+    width: 35%;
     padding: 10px !important;
-    height: 200px;
+    height: 20%;
     border-radius: 1rem !important;
   
     h1 {
@@ -25,7 +25,7 @@
     }
   
     @media only screen and (max-width: 767px) {
-      width: 90%;
-      height: 180px;
+      width: 70%;
+      height: 22%;
     }
   }

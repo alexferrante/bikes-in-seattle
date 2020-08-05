@@ -5,7 +5,7 @@ import moment from 'moment';
 import './settingsContainer.scss';
 
 import "react-datepicker/dist/react-datepicker.css";
-import 'semantic-ui-css/semantic.css';
+import 'semantic-ui-css/semantic.min.css';
 
 const significantDates = [
   '2020-03-12', 
@@ -107,7 +107,7 @@ class SettingsContainer extends React.Component {
         <Divider horizontal hidden />
         <Form inverted>
           <Menu inverted fluid widths={2} size='mini'>
-            <Menu.Item name="count" active={mode === "count"} onClick={handleModeClick} />
+            <Menu.Item name="Count" active={mode === "Count"} onClick={handleModeClick} />
           </Menu>
           <Grid columns={2}>
             <Grid.Row>

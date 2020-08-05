@@ -4,17 +4,22 @@
     top: 230px;
     left: 10px;
     bottom: auto;
-    width: 500px;
+    width: 35%;
     padding: 10px !important;
-    max-height: calc(100% - 220px);
+    height: 55%;
+    max-height: 60%;
     border-radius: 1rem !important;
+    background-color: white !important;
+
+    @media only screen and (max-width: 767px) {
+      width: 70%;
+      height: 50%;
+    }
   }
 
   .inner-databox {
-    overflow-y: scroll;
     overflow-x: hidden;
-    width: 480px;
-    max-height: 60vh;
+    height: 100%;
   }
 
   h3 {
